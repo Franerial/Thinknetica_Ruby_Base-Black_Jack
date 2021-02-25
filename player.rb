@@ -1,45 +1,18 @@
 # frozen_string_literal: true
 
-require_relative 'validation'
+require_relative 'hand'
 
 class Player
-  include Validation
-  attr_accessor :total_score, :bank, :cards
-  attr_reader :name
+  attr_accessor :bank
+  attr_reader :name, :hand
 
-  FORMAT = /^[A-Z]{1}[a-z]{2,7}/.freeze
-
-  validate :name, :presence
-  validate :name, :format, FORMAT
-  validate :name, :type, String
-
-  def initialize(name)
-    @name = name
+  def initialize
     @bank = 100
-    @cards = []
-    @total_score = 0
-    validate!
+    @hand = Hand.new
   end
 
   def add_card(card)
-    cards << card
-    update_total_score(card.cost)
-  end
-
-  private
-
-  def update_total_score(card_cost)
-    return self.total_score += card_cost if card_cost.instance_of?(Integer)
-
-    possible_total_score1 = total_score + 1
-    possible_total_score2 = total_score + 11
-
-    self.total_score = if (21 - possible_total_score1 < 21 - possible_total_score2) && (possible_total_score1 <= 21)
-                         possible_total_score1
-                       elsif possible_total_score2 <= 21
-                         possible_total_score2
-                       else
-                         possible_total_score1
-                       end
+    hand.cards << card
+    hand.update_total_score(card.cost)
   end
 end

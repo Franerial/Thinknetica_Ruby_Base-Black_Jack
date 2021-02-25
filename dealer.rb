@@ -4,6 +4,7 @@ class Dealer < Player
   NAME = 'Dealer'
 
   def initialize
-    super NAME
+    super
+    @name = NAME
   end
 end
